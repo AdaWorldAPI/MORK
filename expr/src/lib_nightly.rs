@@ -3,6 +3,7 @@ use std::convert::Infallible;
 use std::fmt::{Debug, Formatter};
 use std::hash::Hasher;
 use std::io::Write;
+#[cfg(feature="nightly")]
 use std::ops::{Coroutine, CoroutineState};
 use std::ptr::slice_from_raw_parts;
 use crate::{byte_item, item_byte, traverseh, Expr, ExprEnv, ExprVar, ExprZipper, Tag, APPLY_DEPTH, PRINT_DEBUG, Bindings};
@@ -173,46 +174,46 @@ impl ItemSink for SliceSink<'_> {
 /// [`apply_e`] no longer uses this -- it scans the bytes directly, which is far cheaper than a
 /// resume per item. It stays because `experiments/eval` genuinely needs the pull shape: it reads
 /// one item, then decides what to do next from its own state, which a push sink cannot express.
-pub fn item_source<'a>(e: Expr) -> impl Coroutine<(), Yield=SourceItem<'a>, Return=usize> {
-    #[coroutine] move || {
-        let mut stack: smallvec::SmallVec<[u8; 64]> = smallvec::SmallVec::new();
-        let mut j: usize = 0;
-        'putting: loop {
-            match unsafe { byte_item(*e.ptr.byte_add(j)) } {
-                Tag::NewVar => { j += 1; yield SourceItem::Tag(Tag::NewVar) }
-                Tag::VarRef(r) => { j += 1; yield SourceItem::Tag(Tag::VarRef(r)) }
-                Tag::SymbolSize(s) => {
-                    let slice = unsafe { &*slice_from_raw_parts(e.ptr.byte_add(j + 1), s as usize) };
-                    yield SourceItem::Symbol(slice);
-                    j += s as usize + 1;
-                }
-                Tag::Arity(a) => {
-                    yield SourceItem::Tag(Tag::Arity(a));
-                    j += 1;
-                    if a > 0 {
-                        stack.push(a);
-                        continue 'putting;
-                    }
-                }
-            };
+pub struct ItemSource<'a> { e: Expr, j: usize, stack: smallvec::SmallVec<[u8; 64]>, done: bool, _p: std::marker::PhantomData<&'a [u8]> }
 
-            'popping: loop {
-                match stack.last_mut() {
-                    None => { break 'putting }
-                    Some(k) => {
-                        *k = *k - 1;
-                        if *k != 0 { continue 'putting }
-                    }
-                }
+impl<'a> ItemSource<'a> {
+    /// Bytes consumed so far; equals the expression length once the iterator is exhausted.
+    pub fn consumed(&self) -> usize { self.j }
+}
 
-                match stack.pop() {
-                    Some(_) => { },
-                    None => break 'popping
-                }
+impl<'a> Iterator for ItemSource<'a> {
+    type Item = SourceItem<'a>;
+    fn next(&mut self) -> Option<SourceItem<'a>> {
+        if self.done { return None }
+        let e = self.e;
+        let item = match unsafe { byte_item(*e.ptr.byte_add(self.j)) } {
+            Tag::NewVar => { self.j += 1; SourceItem::Tag(Tag::NewVar) }
+            Tag::VarRef(r) => { self.j += 1; SourceItem::Tag(Tag::VarRef(r)) }
+            Tag::SymbolSize(s) => {
+                let slice = unsafe { &*slice_from_raw_parts(e.ptr.byte_add(self.j + 1), s as usize) };
+                self.j += s as usize + 1;
+                SourceItem::Symbol(slice)
+            }
+            Tag::Arity(a) => {
+                self.j += 1;
+                if a > 0 { self.stack.push(a); return Some(SourceItem::Tag(Tag::Arity(a))) }
+                SourceItem::Tag(Tag::Arity(a))
             }
         };
-        j
+        loop {
+            match self.stack.last_mut() {
+                None => { self.done = true; break }
+                Some(k) => { *k -= 1; if *k != 0 { break } }
+            }
+            self.stack.pop();
+        }
+        Some(item)
     }
+}
+
+/// Pull-based reader over an expression's items (stable iterator form of the former coroutine).
+pub fn item_source<'a>(e: Expr) -> ItemSource<'a> {
+    ItemSource { e, j: 0, stack: smallvec::SmallVec::new(), done: false, _p: std::marker::PhantomData }
 }
 
 /// Instantiate `e` under `bindings`, feeding the result to `sink`.

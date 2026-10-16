@@ -79,7 +79,7 @@ impl SharedMapping {
 
     let file = std::fs::File::open(in_path.as_ref())?;
     let mut zip_archive = ZipArchive::new(file).map_err(|_|std::io::Error::other("failed to read zip archive"))?;
-    let files = zip_archive.file_names().map(|s|s.to_owned()).collect::<Vec<_>>();
+    let files = zip_archive.file_names().map(|s| s.map(|c| c.into_owned())).collect::<Result<Vec<String>, _>>().map_err(std::io::Error::other)?;
     
     fn hex_to_byte(&h : &u8)->u8 {
       match h {

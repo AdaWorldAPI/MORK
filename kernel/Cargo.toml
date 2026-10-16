@@ -9,7 +9,7 @@ eval-ffi = { workspace=true }
 mork-frontend = { workspace=true }
 mork-expr = { workspace=true }
 mork-interning = { workspace = true }
-pathmap = { workspace = true, features = ["nightly"] }
+pathmap = { workspace = true,  }
 log = { workspace=true }
 env_logger = { workspace=true }
 memmap2 = "0.9.5"
@@ -33,6 +33,7 @@ neo4j = ["dep:neo4rs", "dep:tokio"]
 interning = []
 wasm = ["dep:wasmtime"]
 z3 = []
+nightly = ["mork-frontend/nightly", "mork-expr/nightly", "pathmap/nightly"]
 leapfrog = [] # experimental: route flat conjunctive exec bodies to the WCO leapfrog join
 no_search = []
 grounding = []

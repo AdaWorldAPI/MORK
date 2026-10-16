@@ -1,8 +1,4 @@
-#![feature(gen_blocks)]
-#![feature(coroutine_trait)]
-#![feature(coroutines)]
-#![feature(stmt_expr_attributes)]
-#![feature(more_float_constants)]
+#![cfg_attr(feature = "nightly", feature(coroutine_trait, coroutines, stmt_expr_attributes))]
 
 pub mod space;
 /// The worst-case-optimal leapfrog join. Compiled only under the `leapfrog` feature, which is
