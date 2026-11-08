@@ -3,6 +3,9 @@ name = "mork-frontend"
 version = "0.1.0"
 edition = "2024"
 
+[features]
+nightly = []
+
 [dependencies]
 mork-expr = { workspace=true }
 pathmap = { workspace=true }

@@ -9,7 +9,7 @@ use std::fmt::Display;
 use std::fs::File;
 use std::hint::unreachable_unchecked;
 use std::mem::MaybeUninit;
-use std::ops::{AddAssign, Coroutine, CoroutineState, MulAssign};
+use std::ops::{AddAssign, MulAssign};
 use std::pin::Pin;
 use std::ptr::{addr_of, null, null_mut, slice_from_raw_parts, slice_from_raw_parts_mut};
 use std::sync::LazyLock;
@@ -1332,31 +1332,32 @@ impl Sink for ASink {
     }
 
     fn request(&self) ->  impl Iterator<Item=WriteResourceRequest> {
-        gen move {
-            match self {
-                ASink::AddSink(s) => { for i in s.request().into_iter() { yield i } }
-                ASink::USink(s) => { for i in s.request().into_iter() { yield i } }
-                ASink::AUSink(s) => { for i in s.request().into_iter() { yield i } }
-                ASink::RemoveSink(s) => { for i in s.request().into_iter() { yield i } }
-                ASink::HeadSink(s) => { for i in s.request().into_iter() { yield i } }
-                ASink::TailSink(s) => { for i in s.request().into_iter() { yield i } }
-                ASink::CountSink(s) => { for i in s.request().into_iter() { yield i } }
-                ASink::HashSink(s) => { for i in s.request().into_iter() { yield i } }
-                ASink::SumSink(s) => { for i in s.request().into_iter() { yield i } }
-                ASink::AndSink(s) => { for i in s.request().into_iter() { yield i } }
-                ASink::ACTSink(s) => { for i in s.request().into_iter() { yield i } }
+        {
+            let v: Vec<WriteResourceRequest> = match self {
+                ASink::AddSink(s) => s.request().into_iter().collect::<Vec<_>>(),
+                ASink::USink(s) => s.request().into_iter().collect::<Vec<_>>(),
+                ASink::AUSink(s) => s.request().into_iter().collect::<Vec<_>>(),
+                ASink::RemoveSink(s) => s.request().into_iter().collect::<Vec<_>>(),
+                ASink::HeadSink(s) => s.request().into_iter().collect::<Vec<_>>(),
+                ASink::TailSink(s) => s.request().into_iter().collect::<Vec<_>>(),
+                ASink::CountSink(s) => s.request().into_iter().collect::<Vec<_>>(),
+                ASink::HashSink(s) => s.request().into_iter().collect::<Vec<_>>(),
+                ASink::SumSink(s) => s.request().into_iter().collect::<Vec<_>>(),
+                ASink::AndSink(s) => s.request().into_iter().collect::<Vec<_>>(),
+                ASink::ACTSink(s) => s.request().into_iter().collect::<Vec<_>>(),
                 #[cfg(feature = "wasm")]
-                ASink::WASMSink(s) => { for i in s.request().into_iter() { yield i } }
+                ASink::WASMSink(s) => s.request().into_iter().collect::<Vec<_>>(),
                 #[cfg(feature = "grounding")]
-                ASink::PureSink(s) => { for i in s.request().into_iter() { yield i } }
+                ASink::PureSink(s) => s.request().into_iter().collect::<Vec<_>>(),
                 #[cfg(feature = "z3")]
-                ASink::Z3Sink(s) => { for i in s.request().into_iter() { yield i } }
-                ASink::CompatSink(s) => { for i in s.request().into_iter() { yield i } }
-                ASink::FSumSink(s) => { for i in s.request().into_iter() { yield i } }
-                ASink::FMinSink(s) => { for i in s.request().into_iter() { yield i } }
-                ASink::FMaxSink(s) => { for i in s.request().into_iter() { yield i } }
-                ASink::FProdSink(s) => { for i in s.request().into_iter() { yield i } }
-            }
+                ASink::Z3Sink(s) => s.request().into_iter().collect::<Vec<_>>(),
+                ASink::CompatSink(s) => s.request().into_iter().collect::<Vec<_>>(),
+                ASink::FSumSink(s) => s.request().into_iter().collect::<Vec<_>>(),
+                ASink::FMinSink(s) => s.request().into_iter().collect::<Vec<_>>(),
+                ASink::FMaxSink(s) => s.request().into_iter().collect::<Vec<_>>(),
+                ASink::FProdSink(s) => s.request().into_iter().collect::<Vec<_>>(),
+            };
+            v.into_iter()
         }
     }
     fn sink<'w, 'a, 'k, It : Iterator<Item=WriteResource<'w, 'a, 'k>>>(&mut self, it: It, path: &[u8]) where 'a : 'w, 'k : 'w {

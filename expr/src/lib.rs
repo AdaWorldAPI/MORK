@@ -17,6 +17,7 @@ use std::{
 use std::collections::{BTreeMap, HashMap};
 use std::collections::hash_map::Entry;
 use std::hash::{Hash, Hasher};
+#[cfg(feature = "nightly")]
 use std::ops::{Coroutine, CoroutineState};
 use std::pin::pin;
 use smallvec::SmallVec;
@@ -26,10 +27,8 @@ pub mod macros;
 #[cfg(feature = "gxhash")]
 use gxhash;
 
-#[cfg(feature="nightly")]
 #[path="lib_nightly.rs"]
 mod lib_nightly;
-#[cfg(feature="nightly")]
 pub use lib_nightly::*;
 
 #[cfg(not(feature = "gxhash"))]

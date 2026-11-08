@@ -1,4 +1,3 @@
-#![feature(string_from_utf8_lossy_owned)]
 
 use mork::{expr, prefix, sexpr, space};
 use mork::space::{transitions, unifications, writes, Space, ACT_PATH};
@@ -219,7 +218,7 @@ fn basic() {
     let mut v = vec![];
     s.dump_sexpr(expr!(s, "$"), expr!(s, "_1"), &mut v);
 
-    println!("out {}", String::from_utf8_lossy_owned(v));
+    println!("out {}", String::from_utf8_lossy(&v).into_owned());
 
 
 }
@@ -260,7 +259,7 @@ fn process_calculus_bench(steps: usize, x: usize, y: usize) {
     // s.dump_all_sexpr(&mut v).unwrap();
     // We're only interested in the petri dish (not the state of exec), and specifically everything that was outputted `!` to `result`
     s.dump_sexpr(expr!(s, "[2] petri [3] ! result $"), expr!(s, "_1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("{x}+{y} ({} steps) in {} µs result: {res}", steps, elapsed.as_micros());
     assert_eq!(res, format!("{}\n", peano(x+y)));
@@ -307,7 +306,7 @@ fn process_calculus_source_sink_bench(steps: usize, x: usize, y: usize) {
     // s.dump_all_sexpr(&mut v).unwrap();
     // We're only interested in the petri dish (not the state of exec), and specifically everything that was outputted `!` to `result`
     s.dump_sexpr(expr!(s, "[2] petri [3] ! result $"), expr!(s, "_1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("{x}+{y} ({} steps) in {} µs result: {res}", steps, elapsed.as_micros());
     assert_eq!(res, format!("{}\n", peano(x+y)));
@@ -349,7 +348,7 @@ fn process_calculus_reverse() {
 
     let mut v = vec![];
     s.dump_sexpr(expr!(s, "[2] petri [3] ! result $"), expr!(s, "_1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "(S (S (S (S Z))))\n");
@@ -373,7 +372,7 @@ fn variable_priority() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(B Z)\n"));
@@ -397,7 +396,7 @@ fn variables_in_priority() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(B Z)\n"));
@@ -420,7 +419,7 @@ fn lookup() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("MATCHED\n"));
@@ -443,7 +442,7 @@ fn positive() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("MATCHED\n"));
@@ -466,7 +465,7 @@ fn positive_equal() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("MATCHED\n"));
@@ -491,7 +490,7 @@ fn negative() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("MATCHED\n"));
@@ -516,7 +515,7 @@ fn negative_equal() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("MATCHED\n"));
@@ -541,7 +540,7 @@ fn bipolar() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("MATCHED\n"));
@@ -566,7 +565,7 @@ fn bipolar_equal() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("MATCHED\n"));
@@ -590,7 +589,7 @@ fn two_positive_equal() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("MATCHED\n"));
@@ -614,7 +613,7 @@ fn two_positive_equal_crossed() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("MATCHED\n"));
@@ -638,7 +637,7 @@ fn two_bipolar_equal_crossed() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(MATCHED (foo bar) (foo bar))\n"));
@@ -682,7 +681,7 @@ fn roman_disjoin_initial() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[4] intersection $ $ $"), expr!(s, "[4] intersection _1 _2 _3"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(intersection 1 2 Nil)
@@ -725,7 +724,7 @@ fn roman_disjoin_final() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[3] disjoint $ $"), expr!(s, "[3] disjoint _1 _2"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(disjoint 1 2)
@@ -752,7 +751,7 @@ fn func_type_unification() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(c OK)\n"));
@@ -772,7 +771,7 @@ fn coref_absorbed_by_data_varref() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("coref_absorbed_by_data_varref steps {} result:\n{res}", steps);
     assert!(res.contains("(RESULT (g y) y)\n"));
@@ -795,7 +794,7 @@ fn data_varref_absorbs_query_compound_newvars() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     assert!(res.contains("OK\n"));
 }
@@ -818,7 +817,7 @@ fn issue_43() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(!res.contains("\nT\n"));
@@ -843,7 +842,7 @@ f
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("OK\n"));
@@ -871,7 +870,7 @@ present
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     // `present` is in the space, so the conjunct holds and every edge fires.
@@ -944,7 +943,7 @@ fn bench_lr() {
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
     // s.dump_sexpr(expr!(s, "[3] state $ [3] REG 3 $"), expr!(s, "[2] _1 _2"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("{res}");
 }
@@ -993,7 +992,7 @@ fn pattern_mining() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[2] res $"), expr!(s, "_1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "(test (foo 1))\n");
@@ -1020,7 +1019,7 @@ fn sink_pure_basic() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[3] B $ $"), expr!(s, "[3] B _1 _2"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "(B 0 321)\n(B 1 racecar)\n(B 2 \"nispo nanom em atamemona nospin\")\n");
@@ -1047,7 +1046,7 @@ fn sink_pure_basic_nested() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[3] B $ $"), expr!(s, "[3] B _1 _2"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "(B 0 123)\n(B 1 racecar)\n(B 2 \"nipson anomemata me monan opsin\")\n");
@@ -1078,7 +1077,7 @@ fn sink_pure_roman_validation() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[3] result $ $"), expr!(s, "[3] result _1 _2"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "(result div_f32 0.26747966)
@@ -1120,7 +1119,7 @@ fn sink_pure_dynamic_subformula() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[3] result $ $"), expr!(s, "[3] result _1 _2"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "(result 0 128.7723)\n(result 1 430.3821000000001)\n");
@@ -1154,7 +1153,7 @@ fn sink_pure_quoted_variable_identity() {
     // space is a set and dump order is not what this pins down.
     let mut v = vec![];
     s.dump_sexpr(expr!(s, "$"), expr!(s, "_1"), &mut v);
-    let dumped = String::from_utf8_lossy_owned(v);
+    let dumped = String::from_utf8_lossy(&v).into_owned();
     let mut lines: Vec<&str> = dumped.lines().filter(|l| !l.is_empty()).collect();
     lines.sort();
     let res = lines.join("\n");
@@ -1183,7 +1182,7 @@ fn sink_pure_quote_collapse_symbol() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[2] myconcat $"), expr!(s, "[2] myconcat _1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "(myconcat _foo_bar)\n");
@@ -1209,7 +1208,7 @@ fn sink_pure_explode_collapse_ident() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[2] result $"), expr!(s, "[2] result _1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "(result foo)\n");
@@ -1239,7 +1238,7 @@ fn sink_pure_ignored_guard_addressing() {
     // space is a set and dump order is not what this pins down.
     let mut v = vec![];
     s.dump_sexpr(expr!(s, "$"), expr!(s, "_1"), &mut v);
-    let dumped = String::from_utf8_lossy_owned(v);
+    let dumped = String::from_utf8_lossy(&v).into_owned();
     let mut lines: Vec<&str> = dumped.lines().filter(|l| !l.is_empty()).collect();
     lines.sort();
     let res = lines.join("\n");
@@ -1268,7 +1267,7 @@ fn sink_bass64url_ident() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[2] result $"), expr!(s, "[2] result _1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "(result foo)\n");
@@ -1294,7 +1293,7 @@ fn sink_hex_ident() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[2] result $"), expr!(s, "[2] result _1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "(result foo)\n");
@@ -1321,7 +1320,7 @@ fn sink_hash_expr() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[2] result $"), expr!(s, "[2] result _1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "(result XoicVnQv2bk)\n(result tspt4QCdRB8)\n");
@@ -1354,7 +1353,7 @@ fn sink_even_half() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[3] half $ $"), expr!(s, "[3] half _1 _2"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "(half 0 5)\n(half 1 5)\n(half 2 6)\n(half 3 6)\n(half 4 7)\n");
@@ -1438,7 +1437,7 @@ fn ip_sudoku() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[3] readout $ $"), expr!(s, "[3] result _1 _2"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     // assert_eq!(res, "(result 45MpKkzURPU)\n(result YcLaBp-nAmo)\n");
@@ -1515,7 +1514,7 @@ fn formula_execution() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
 }
@@ -1561,7 +1560,7 @@ fn pattern_mining_lensy() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(rest (Outer (Inner \"piranha\")))\n"));
@@ -1629,7 +1628,7 @@ fn bench_pattern_mining_lensy() {
     // s.dump_all_sexpr(&mut v).unwrap();
     // s.dump_sexpr(expr!(s, "[4] [2] peel $ $ $ $"), expr!(s, "[3] _2 -> _4"), &mut v);
     s.dump_sexpr(expr!(s, "[4] found the_proposed $ $"), expr!(s, "[3] _1 -> _2"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result:\n{res}");
     // assert!(res.contains("OK\n"));
@@ -1675,7 +1674,7 @@ fn meta_ana() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[2] space-example $"), expr!(s, "_1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("{res}");
     assert_eq!(res, desired_output);
@@ -1734,7 +1733,7 @@ fn meta_ana_exec() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[2] space-example $"), expr!(s, "_1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("{res}");
     assert_eq!(res, desired_output);
@@ -1957,7 +1956,7 @@ fn source_space_two_bipolar_equal_crossed() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(MATCHED (foo bar) (foo bar))\n"));
@@ -1990,7 +1989,7 @@ fn source_act_two_bipolar_equal_crossed() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(MATCHED (foo bar) (foo bar))\n"));
@@ -2023,7 +2022,7 @@ fn source_space_act_two_bipolar_equal_crossed() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(MATCHED (foo bar) (foo bar))\n"));
@@ -2047,7 +2046,7 @@ fn source_cmp_eq() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(REM (RHS ($a bar)))\n"));
@@ -2070,7 +2069,7 @@ fn source_sink_cmp_eq_remove() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(RES (foo bar))\n"));
@@ -2094,7 +2093,7 @@ fn source_sink_cmp_eq_remove_both() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(RES (foo bar))\n"));
@@ -2127,7 +2126,7 @@ fn source_sink_annihilate() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(continue bar)\n"));
@@ -2152,7 +2151,7 @@ fn source_cmp_eq_var_constraint() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     // assert!(res.contains("(REM (RHS ($a bar)))\n"));
@@ -2175,7 +2174,7 @@ fn source_cmp_ne() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[2] OUT $"), expr!(s, "_1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(X != Y)
@@ -2205,7 +2204,7 @@ fn source_cmp_rel() {
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
     // s.dump_sexpr(expr!(s, "[2] OUT $"), expr!(s, "_1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(rel X X ==)
@@ -2237,7 +2236,7 @@ fn source_map_reverse() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(res Z) (res R)
@@ -2263,7 +2262,7 @@ fn source_map_oom() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(oom_of 103904 6) (oom_of 293 3)
@@ -2288,7 +2287,7 @@ fn sink_two_bipolar_equal_crossed() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(MATCHED (foo bar) (foo bar))\n"));
@@ -2312,7 +2311,7 @@ fn sink_two_positive_equal_crossed() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("MATCHED\n"));
@@ -2335,7 +2334,7 @@ A
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(!res.contains("A\n"));
@@ -2364,7 +2363,7 @@ fn sink_remove_many() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
 }
@@ -2397,7 +2396,7 @@ fn cross_join_tuple() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[3] CROSSJOIN $ $"), expr!(s, "_2"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, r#"(, Cheat 3489 Marketing 1 2)
@@ -2443,7 +2442,7 @@ fn cross_join_dict() {
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
     // s.dump_sexpr(expr!(s, "[3] CROSSJOIN $ $"), expr!(s, "_2"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
 //     assert_eq!(res, r#"(, Cheat 3489 Marketing 1 2)
@@ -2473,7 +2472,7 @@ fn sink_add_remove_var() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(!res.contains("(foo a)\n"));
@@ -2516,7 +2515,7 @@ fn sink_odd_even_sort() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[3] A $ $"), expr!(s, "_2"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result:\n{res}");
     assert_eq!(res, "A\nB\nC\nD\nE\n");
@@ -2548,7 +2547,7 @@ fn sink_unify() {
     let mut v = vec![];
     s.dump_sexpr(expr!(s, "[3] out $ $"), expr!(s, "[2] _1 _2"), &mut v);
     // s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "(0 (a b))\n(1 (foo $a $b $b $b (bar baz) (expr) (one (expr) (some (expr)))))\n")
@@ -2580,7 +2579,7 @@ fn sink_anti_unify() {
     let mut v = vec![];
     s.dump_sexpr(expr!(s, "[3] out $ $"), expr!(s, "[2] _1 _2"), &mut v);
     // s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "(0 ($a $a))\n(1 (foo $a $b $b $c $d (bar baz) $e $f))\n")
@@ -2605,7 +2604,7 @@ fn sink_head() {
     let mut v = vec![];
     s.dump_sexpr(expr!(s, "[4] cux $ $ $"), expr!(s, "[3] _3 _2 _1"), &mut v);
     // s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "(1 x P)\n(2 x P)\n(3 x P)\n(1 y P)\n(2 y P)\n(3 y P)\n(1 x Q)\n")
@@ -2712,7 +2711,7 @@ fn sink_count_literal() {
     let mut v = vec![];
     s.dump_sexpr(expr!(s, "[2] all $"), expr!(s, "_1"), &mut v);
     // s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "eighteen\n")
@@ -2735,7 +2734,7 @@ fn sink_sum_literal() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("correct"));
@@ -2763,7 +2762,7 @@ fn sink_sum_sets() {
     let mut v = vec![];
     s.dump_sexpr(expr!(s, "[5] set $ contains $ elements"), expr!(s, "[2] _1 _2"), &mut v);
     // s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "(ten 10)\n(five 5)\n(three 3)\n");
@@ -2788,7 +2787,7 @@ fn sink_count_constant() {
     let mut v = vec![];
     s.dump_sexpr(expr!(s, "[2] all $"), expr!(s, "_1"), &mut v);
     // s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "stupid\n")
@@ -2910,7 +2909,7 @@ fn sink_float_reduce() {
     let mut v = vec![];
     s.dump_sexpr(expr!(s, "$"), expr!(s, "_1"), &mut v);
     // s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "(max 990.2)
@@ -2938,7 +2937,7 @@ fn sink_count() {
     let mut v = vec![];
     s.dump_sexpr(expr!(s, "[2] all $"), expr!(s, "_1"), &mut v);
     // s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "18\n")
@@ -2973,7 +2972,7 @@ fn sink_exec_remove_trigger() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("error"));
@@ -3001,7 +3000,7 @@ fn sink_act_readback() {
         s.restore_tree(format!("{}sink_act_readback.act", ACT_PATH));
         let mut v = vec![];
         s.dump_all_sexpr(&mut v).unwrap();
-        let res = String::from_utf8_lossy_owned(v);
+        let res = String::from_utf8_lossy(&v).into_owned();
 
         println!("result: {res}");
         assert_eq!(res.bytes().filter(|b| *b == b'\n').count(), 18)
@@ -3029,7 +3028,7 @@ fn sink_act_mixed_readback() {
         s.restore_tree(format!("{}sink_act_mixed_readback.act", ACT_PATH));
         let mut v = vec![];
         s.dump_all_sexpr(&mut v).unwrap();
-        let res = String::from_utf8_lossy_owned(v);
+        let res = String::from_utf8_lossy(&v).into_owned();
 
         println!("result: {res}");
         assert_eq!(res.bytes().filter(|b| *b == b'\n').count(), 18)
@@ -3056,7 +3055,7 @@ fn source_sink_act_readback() {
     let mut v = vec![];
     s.dump_sexpr(expr!(s, "[4] cuux $ $ $"), expr!(s, "[4] cuux _1 _2 _3"), &mut v);
     // s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res.bytes().filter(|b| *b == b'\n').count(), 18)
@@ -3090,7 +3089,7 @@ fn sink_count_double() {
     let mut v = vec![];
     // s.dump_sexpr(expr!(s, "[2] all $"), expr!(s, "_1"), &mut v);
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("count-1 3"));
@@ -3125,7 +3124,7 @@ fn sink_count_double_repeated() {
     let mut v = vec![];
     // s.dump_sexpr(expr!(s, "[2] all $"), expr!(s, "_1"), &mut v);
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("count-1 3"));
@@ -3157,7 +3156,7 @@ fn sink_hash_spaces() {
     let mut v = vec![];
     s.dump_sexpr(expr!(s, "[2] all $"), expr!(s, "_1"), &mut v);
     // s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     // assert!(res.contains("count-1 3"));
@@ -3195,7 +3194,7 @@ fn sink_hash_properties() {
     s.dump_sexpr(result.expr(), result.expr(), &mut v);
     assert!(v.len() != 0);
     // s.dump_all_sexpr(&mut v).unwrap();
-    // let res = String::from_utf8_lossy_owned(v);
+    // let res = String::from_utf8_lossy(&v).into_owned();
     //
     // println!("result: {res}");
     // assert!(res.contains("count-1 3"));
@@ -3249,7 +3248,7 @@ fn sink_hexlife_symbolic() {
     let mut v = vec![];
     // s.dump_sexpr(expr!(s, "[2] all $"), expr!(s, "_1"), &mut v);
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     // assert_eq!(res, "stupid\n")
@@ -3316,7 +3315,7 @@ fn bench_sink_hexlife_axial() {
     let mut v = vec![];
     s.dump_sexpr(expr!(s, "[3] alive $ $"), expr!(s, "[3] alive _1 _2"), &mut v);
     // s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     // assert_eq!(res, "stupid\n")
@@ -3351,7 +3350,7 @@ fn sink_z3_basic() {
     let mut v = vec![];
     s.dump_sexpr(expr!(s, "[2] out $"), expr!(s, "_1"), &mut v);
     // s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "1\n");
@@ -3389,7 +3388,7 @@ fn sink_z3_basic_multi() {
     let mut v = vec![];
     s.dump_sexpr(expr!(s, "[2] out $"), expr!(s, "_1"), &mut v);
     // s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, "2\n");
@@ -3443,7 +3442,7 @@ fn sink_wasm_add() {
     // let mut v = vec![];
     // s.dump_sexpr(expr!(s, "[4] cux $ $ $"), expr!(s, "[3] _3 _2 _1"), &mut v);
     // s.dump_all_sexpr(&mut v).unwrap();
-    // let res = String::from_utf8_lossy_owned(v);
+    // let res = String::from_utf8_lossy(&v).into_owned();
 
     // println!("result: {res}");
     // assert_eq!(res, "(1 x P)\n(2 x P)\n(3 x P)\n(1 y P)\n(2 y P)\n(3 y P)\n(1 x Q)\n")
@@ -3479,7 +3478,7 @@ fn bench_sink_odd_even_sort(elements: usize) {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[3] A $ $"), expr!(s, "_2"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     // println!("result:\n{res}");
     assert_eq!(res[..res.len()-1], arr.iter().map(|i| i.to_string()).join("\n"));
@@ -3690,7 +3689,7 @@ fn bc0() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(ev (: (@ (@ MP bc) (@ (@ MP ab) a)) C))\n"));
@@ -3738,7 +3737,7 @@ fn bc1() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(ev (: (@ (@ MP cd) (@ (@ MP bc) (@ (@ MP ab) a))) D))\n"));
@@ -3816,7 +3815,7 @@ fn bc2() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[2] ev [3] : $ 𝜒"), expr!(s, "_1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("proof of 𝜒: {res}");
     assert!(res.contains("(@ ax-mp (@ ax-mp mp2b.1 mp2b.2) mp2b.3)\n"));
@@ -3897,7 +3896,7 @@ fn bc3() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[2] ev [3] : $ C"), expr!(s, "_1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("proof: {res}");
 
@@ -3908,7 +3907,7 @@ fn bc3() {
     //     let mut v = vec![];
     //     s.dump_all_sexpr(&mut v).unwrap();
     //     // s.dump_sexpr(expr!(s, "[2] ev [3] : $ C"), expr!(s, "_1"), &mut v).unwrap();
-    //     let res = String::from_utf8_lossy_owned(v);
+    //     let res = String::from_utf8_lossy(&v).into_owned();
     //
     //     println!("result: {res}");
     //
@@ -3986,7 +3985,7 @@ fn bench_cm0(to_copy: usize) {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[3] state $ [3] REG 3 $"), expr!(s, "[2] _1 _2"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
     
     // println!("{res}");
     assert!(res.contains(format!("({} {})", last_ts, peano(to_copy)).as_str()));
@@ -4021,7 +4020,7 @@ fn bench_cm0(to_copy: usize) {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
 }*/
@@ -4632,7 +4631,7 @@ fn ctl() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     // println!("result: {res}");
     assert!(!res.contains("MISTAKE\n"));
@@ -4685,7 +4684,7 @@ fn lens_aunt() {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[2] data [2] result $"), expr!(s, "_1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("{res}");
     assert_eq!(res, "(Ann aunt of Jim)\n(Liz aunt of Ann)\n");
@@ -4713,7 +4712,7 @@ fn lens_composition() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("{res}");
     assert!(res.contains("(lens ((ns o aunt) (users (adam (experiments (poi $a)))) $a $b (users (adam (experiments (result ($b aunt of $a)))))))"));
@@ -4905,7 +4904,7 @@ fn bench_finite_domain(terms: usize) {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[2] res $"), expr!(s, "_1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("{}", s.btm.val_count());
     println!("{res} ({terms} inputs) in {} µs", t1.duration_since(t0).as_micros());
@@ -4914,6 +4913,7 @@ fn bench_finite_domain(terms: usize) {
 }
 
 #[cfg(all(feature = "nightly"))]
+#[cfg(feature = "nightly")]
 fn json_upaths_smoke() {
     let test = r#"{
 "first_name": "John",
@@ -4941,7 +4941,7 @@ fn json_upaths_smoke() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
     println!("res {res}");
     assert_eq!(res, r#"(age 27)
 (spouse null)
@@ -4962,6 +4962,7 @@ fn json_upaths_smoke() {
 "#);
 }
 
+#[cfg(feature = "nightly")]
 fn json_upaths<IPath: AsRef<std::path::Path>, OPath : AsRef<std::path::Path>>(json_path: IPath, upaths_path: OPath) {
     println!("mmapping JSON file {:?}", json_path.as_ref().as_os_str());
     println!("writing out unordered .paths file {:?}", upaths_path.as_ref().as_os_str());
@@ -5046,7 +5047,7 @@ fn pddl_ts<IPath: AsRef<std::path::Path>>(ts_path: IPath) {
     // s.dump_all_sexpr(&mut v).unwrap();
     // s.dump_sexpr(expr!(s, "[3] U p-3-0 $"), expr!(s, "_1"), &mut v);
     s.dump_sexpr(expr!(s, "[3] [2] C $ p-3-0 $"), expr!(s, "[2] _1 _2"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     /*
@@ -5075,7 +5076,7 @@ fn stv_roman() {
 
     let mut v = vec![];
     s.dump_sexpr(expr!(s, "[2] ev $"), expr!(s, "_1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
     println!("result: {res}");
 }
 
@@ -5118,7 +5119,7 @@ fn large_statement() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
     println!("result: {res}");
     assert_eq!(res, "(exec (1 0) (, (recipe $a (numIngredients 1)) (recipe $a (ingredients 0 $b)) (inventory $b) (recipe $a (result (id $c)))) (, (inventory $c)))
 (exec (1 1) (, (recipe $a (numIngredients 1)) (recipe $a (result (id $b))) (recipe $a (pattern 0 $c)) (recipe $a (key ($c $d))) (inventory $d)) (, (inventory $b)))
@@ -5190,7 +5191,7 @@ fn exponential_fringe(steps: usize) {
 
     // let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
-    // let res = String::from_utf8_lossy_owned(v);
+    // let res = String::from_utf8_lossy(&v).into_owned();
     //
     // println!("result: {res}");
 }
@@ -5229,7 +5230,7 @@ fn linear_fringe_alternating(steps: usize) {
 
     // let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
-    // let res = String::from_utf8_lossy_owned(v);
+    // let res = String::from_utf8_lossy(&v).into_owned();
     //
     // println!("result: {res}");
 }
@@ -5269,7 +5270,7 @@ fn linear_alternating(steps: usize) {
 
     // let mut v = vec![];
     // s.dump_all_sexpr(&mut v).unwrap();
-    // let res = String::from_utf8_lossy_owned(v);
+    // let res = String::from_utf8_lossy(&v).into_owned();
     //
     // println!("result: {res}");
 }
@@ -5431,7 +5432,7 @@ fn bench_taxi_lts() {
     // s.dump_all_sexpr(&mut v).unwrap();
     s.dump_sexpr(expr!(s, "[3] time $ $"), expr!(s, "[3] time _1 _2"), &mut v);
     s.dump_sexpr(expr!(s, "[2] TOTAL $"), expr!(s, "[2] TOTAL _1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert!(res.contains("(TOTAL 504)"));
@@ -5509,7 +5510,7 @@ fn test_memory_size() {
 
     let mut v = vec![];
     s.dump_sexpr(expr!(s, "[3] which $ $"), expr!(s, "[3] which _1 _2"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
     //
     s.backup_tree("/home/adam/Projects/MORK/rules.act").unwrap();
     s.backup_paths("/home/adam/Projects/MORK/rules.paths").unwrap();
@@ -6034,7 +6035,7 @@ fn bfc(size: usize) {
     let mut v = vec![];
     // s.dump_all_sexpr(&mut v);
     s.dump_sexpr(expr!(s, "[4] final 0 0 $"), expr!(s, "_1"), &mut v);
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
 
     println!("result: {res}");
     assert_eq!(res, map[&size].1);
@@ -6147,7 +6148,7 @@ fn parse_json() {
 
     let mut v = vec![];
     s.dump_all_sexpr(&mut v).unwrap();
-    let res = String::from_utf8_lossy_owned(v);
+    let res = String::from_utf8_lossy(&v).into_owned();
     
     println!("{}", res);
     assert_eq!(set_from_newlines(SEXPRS0), set_from_newlines(res.as_str()));
@@ -6380,7 +6381,7 @@ fn main() {
             if output_path.is_none() {
                 let mut v = vec![];
                 s.dump_all_sexpr(&mut v).unwrap();
-                let res = String::from_utf8_lossy_owned(v);
+                let res = String::from_utf8_lossy(&v).into_owned();
                 println!("result:\n{res}");
             } else {
                 let f = std::fs::File::create(&output_path.unwrap()).unwrap();
@@ -6473,6 +6474,7 @@ fn main() {
                         _ => { unreachable!() }
                     }
                 }
+                #[cfg(feature = "nightly")]
                 ("json", "upaths") => {
                     assert_eq!(pattern, "$");
                     assert_eq!(template, "_1");

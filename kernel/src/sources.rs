@@ -235,15 +235,16 @@ impl Source for ASource {
     }
 
     fn request(&self) -> impl Iterator<Item=ResourceRequest> {
-        gen move {
-            match self {
-                ASource::PosSource(s) => { for i in s.request().into_iter() { yield i } }
-                ASource::ACTSource(s) => { for i in s.request().into_iter() { yield i } }
-                ASource::CmpSource(s) => { for i in s.request().into_iter() { yield i } }
-                ASource::CompatSource(s) => { for i in s.request().into_iter() { yield i } }
+        {
+            let v: Vec<ResourceRequest> = match self {
+                ASource::PosSource(s) => s.request().into_iter().collect::<Vec<_>>(),
+                ASource::ACTSource(s) => s.request().into_iter().collect::<Vec<_>>(),
+                ASource::CmpSource(s) => s.request().into_iter().collect::<Vec<_>>(),
+                ASource::CompatSource(s) => s.request().into_iter().collect::<Vec<_>>(),
                 #[cfg(feature = "z3")]
-                ASource::Z3Source(s) => { for i in s.request().into_iter() { yield i } }
-            }
+                ASource::Z3Source(s) => s.request().into_iter().collect::<Vec<_>>(),
+            };
+            v.into_iter()
         }
     }
 
